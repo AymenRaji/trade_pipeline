@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  dlt:
+    image: dlt_pipeline_im
+    build:
+      context: ./dlt_pipeline
+      dockerfile: Dockerfile
+    volumes:
+      - ${HOST_DLT_DIR}:${CONTAINER_DLT_DIR}
+    env_file:
+      - .env
+  
