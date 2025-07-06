@@ -1,0 +1,41 @@
+storage:
+  postgres:
+    postgres_db:
+      username:
+        env: POSTGRES_USER
+      password:
+        env: POSTGRES_PASSWORD
+      hostname:
+        env: POSTGRES_HOST
+      db_name:
+        env: POSTGRES_DB
+      port: 5432
+
+
+run_retries:
+  enabled: true
+  max_retries: 1 # Sets a default for all jobs. 0 if not set
+  retry_on_asset_or_op_failure: false
+
+run_queue:
+  max_concurrent_runs: 2
+  tag_concurrency_limits:
+  # allow only one adf job in parallel
+    - key: "jobs"
+      value: "adf"
+      limit: 3
+
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: "/opt/dagster/local/"
+
+compute_logs:
+  module: dagster.core.storage.local_compute_log_manager
+  class: LocalComputeLogManager
+  config:
+    base_dir: "/opt/dagster/app/storage"
+
+telemetry:
+  enabled: false

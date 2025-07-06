@@ -1,0 +1,5 @@
+load_from:
+  - python_module:
+      module_name: alpaca_pipeline
+      working_directory: /opt/dagster/app/
+      # /home/aymen/Backup/de_projects/trade_pipeline/dagster
