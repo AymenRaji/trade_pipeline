@@ -2,8 +2,8 @@ import requests
 import dlt  
 import requests
 import os
-from helpers import * 
-from settings import *
+from .helpers import * 
+from .settings import *
 
 def retrive_daily_shares():
     """
@@ -44,3 +44,10 @@ def retrive_daily_shares():
 @dlt.resource(write_disposition='merge', primary_key="id", name="raw_daily_stocks")
 def virtual_trade_one():    
     yield from retrive_daily_shares()
+
+
+
+@dlt.source
+def daily_share_statistics():
+    return virtual_trade_one()
+
