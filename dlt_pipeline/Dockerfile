@@ -2,7 +2,7 @@
 
 FROM python:3.13-slim
 
-WORKDIR /dlt_piepeline_dir
+WORKDIR /opt/dagster/app/
 
 COPY requirements.txt .
 
