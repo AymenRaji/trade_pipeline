@@ -2,12 +2,112 @@ version: "3.9"
 
 services:
   dlt:
-    image: dlt_pipeline_im
+    image: dlt_pipeline
+    container_name: dlt_pipeline_app
     build:
-      context: ./dlt_pipeline
+      context: ${HOST_DLT_DIR}
       dockerfile: Dockerfile
     volumes:
       - ${HOST_DLT_DIR}:${CONTAINER_DLT_DIR}
     env_file:
       - .env
   
+  dagster_db:
+    restart: always
+    image: postgres:13
+    container_name: dagster_db
+    env_file:
+      - .env
+    volumes:
+      - dagster_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  alpaca_trade_app:
+    image: alpaca_trade
+    container_name: alpaca_trade_app
+    build: 
+      context: ${HOST_DAGSTER_DIR}
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - dagster_db
+      - dlt
+    env_file:
+      - .env
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import dagster"]
+      interval: 10s
+      timeout: 300s
+      start_period: 10s
+
+    volumes:
+      - ${HOST_DAGSTER_DIR}:/opt/dagster/app/
+      - ${HOST_DLT_DIR}:/opt/dagster/app/dlt_pipeline
+      - ./.dlt:/opt/dagster/app/.dlt
+
+  dagster_webserver:
+    build: 
+      context: ${HOST_DAGSTER_DIR}
+      dockerfile: Dockerfile
+    container_name: dagster_webserver
+    image: dagster_webserver
+    restart: always
+    depends_on:
+      dagster_db:
+        condition: service_started
+      alpaca_trade_app:
+        condition: service_healthy
+      dlt:
+        condition: service_started
+
+    env_file:
+      - .env
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    command: dagster dev
+    volumes:
+      - ${HOST_DAGSTER_DIR}:/opt/dagster/app
+      - ${HOST_DLT_DIR}:/opt/dagster/app/dlt_pipeline
+      - dagster_compute_logs:/opt/dagster/app/storage
+    command: >
+      bash -c "dagster-webserver -h 0.0.0.0 -p 3000 -w workspace.yaml"
+
+  # docker_daemon:
+  #   build:
+  #     context: ${HOST_DAGSTER_DIR}
+  #     dockerfile: Dockerfile
+  #   entrypoint:
+  #     - dagster-daemon
+  #     - run
+  #   image: dagster_daemon
+  #   container_name: docker_daemon
+  #   restart: always
+  #   env_file:
+  #     - .env
+  
+  #   volumes: # Make docker client accessible so we can launch containers using host docker
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /tmp/io_manager_storage:/tmp/io_manager_storage
+    
+    depends_on:
+      dagster_db:
+        condition: service_healthy
+      alpaca_trade_app:
+        condition: service_started
+
+volumes:
+  dagster_db:
+    name: dagster_db
+  dagster_compute_logs:
+    name: dagster_compute_logs
+    driver: local
+
+
+# network:
