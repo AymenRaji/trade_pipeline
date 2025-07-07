@@ -1,3 +1,4 @@
 .env
 .dlt
 __pycache__
+storage
