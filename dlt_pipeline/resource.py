@@ -5,6 +5,9 @@ import os
 from .helpers import * 
 from .settings import *
 
+
+header = headers()
+
 def retrive_daily_shares():
     """
     Retrieve auction data from Alpaca between start_date and end_date
@@ -14,7 +17,7 @@ def retrive_daily_shares():
    
     url = "https://data.alpaca.markets/v2/stocks/auctions"
     params = retrive_daily_shares_parametrs()
-    header = headers()
+    
 
     all_flatten_data = []
     while True:
@@ -40,14 +43,51 @@ def retrive_daily_shares():
     return all_flatten_data
 
 
+def retrive_daily_news():
 
-@dlt.resource(write_disposition='merge', primary_key="id", name="raw_daily_stocks")
+    params = retrive_daily_news_paramets()
+    url = "https://data.alpaca.markets/v1beta1/news"
+
+    all_news = []
+    while True:
+        response = requests.get(url, headers=header, params=params)
+
+        response_json = response.json()
+        news = response_json.get("news", [])
+        if news:
+            flattened_news = flatten_daily_news(news)
+            all_news.append(flattened_news)
+
+        next_page = response_json.get("next_page_token", "")
+        if next_page:
+            params["page_token"] = next_page
+        else:
+            break
+
+    return all_news
+    
+
+
+@dlt.resource(
+    write_disposition='merge', 
+    primary_key="id", 
+    name="raw_daily_stocks"
+)
 def virtual_trade_one():    
     yield from retrive_daily_shares()
+
+@dlt.resource(
+    write_disposition='merge', 
+    primary_key="id", 
+    name="raw_daily_news", 
+    columns={"symbols": {"data_type": "json", "nullable": True}}
+)
+def daily_news():    
+    yield from retrive_daily_news()
 
 
 
 @dlt.source
 def daily_share_statistics():
-    return virtual_trade_one()
+    return virtual_trade_one(), daily_news()
 

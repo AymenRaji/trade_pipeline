@@ -1,5 +1,8 @@
 import dlt
 
+
+symbols = ["AAPL", "TSLA", "AMZN", "MSFT"]
+
 def headers():
     api_key = dlt.secrets["sources.credentials.API_KEY"]
     secret_key = dlt.secrets["sources.credentials.SECRET_KEY"]
@@ -14,7 +17,7 @@ def headers():
 
 
 def retrive_daily_shares_parametrs():
-    symbols = ["AAPL", "TSLA", "AMZN", "MSFT"]
+   
     start_date = "1999-12-31T00:00:00Z"
     end_date = "2025-07-03T00:00:00Z"
     param = {
@@ -25,3 +28,18 @@ def retrive_daily_shares_parametrs():
         "sort":"asc"
     }
     return param
+
+
+
+def retrive_daily_news_paramets():
+
+    start_date = "2015-01-01T00:00:00Z"
+    end_date = "2025-07-06T00:00:00Z"
+    params = {
+        "symbols":",".join(symbols),
+        "start":start_date,
+        "end":end_date,
+        "sort":"desc"
+    }
+
+    return params
