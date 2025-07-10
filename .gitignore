@@ -2,3 +2,5 @@
 .dlt
 __pycache__
 storage
+profiles.yml
+.user.yml
