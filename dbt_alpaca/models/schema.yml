@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: dim_date
+  - name: curated_daily_stock_history
+  - name: curated_daily_news_history
+  - name: fct_daily_stock_news_impact
+
+
+sources:
+  - name: raw_alpaca
+    schema: raw_alpaca
+    tables:
+      - name: raw_daily_news
+      - name: raw_daily_stocks
+        columns: 
+          - name: id
+            tests:
+              - not_null
+              - unique
+      
+      
