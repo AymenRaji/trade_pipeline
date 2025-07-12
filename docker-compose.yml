@@ -46,9 +46,10 @@ services:
       start_period: 10s
 
     volumes:
+      - ${HOST_DBT_DIR}:/opt/dagster/app/dbt
       - ${HOST_DAGSTER_DIR}:/opt/dagster/app/
       - ${HOST_DLT_DIR}:/opt/dagster/app/dlt_pipeline
-      - ./.dlt:/opt/dagster/app/.dlt
+      - ${DLT_SECRETS_DIR}:/opt/dagster/app/.dlt
 
   dagster_webserver:
     build: 
@@ -75,28 +76,11 @@ services:
     volumes:
       - ${HOST_DAGSTER_DIR}:/opt/dagster/app
       - ${HOST_DLT_DIR}:/opt/dagster/app/dlt_pipeline
-      - ./.dlt:/opt/dagster/app/.dlt
+      - ${DLT_SECRETS_DIR}:/opt/dagster/app/.dlt
       - dagster_compute_logs:/opt/dagster/app/storage
     command: >
       bash -c "dagster-webserver -h 0.0.0.0 -p 3000 -w workspace.yaml"
 
-  # docker_daemon:
-  #   build:
-  #     context: ${HOST_DAGSTER_DIR}
-  #     dockerfile: Dockerfile
-  #   entrypoint:
-  #     - dagster-daemon
-  #     - run
-  #   image: dagster_daemon
-  #   container_name: docker_daemon
-  #   restart: always
-  #   env_file:
-  #     - .env
-  
-  #   volumes: # Make docker client accessible so we can launch containers using host docker
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - /tmp/io_manager_storage:/tmp/io_manager_storage
-    
     depends_on:
       dagster_db:
         condition: service_healthy
