@@ -12,7 +12,7 @@ from dlt_pipeline.resource import daily_share_statistics
     dlt_pipeline=dlt.pipeline(
         pipeline_name="trade",
         destination='snowflake',
-        dataset_name="trade_schema",
+        dataset_name="raw_alpaca",
         progress="log"
     ),
     name="alpaca_trade_shares",
