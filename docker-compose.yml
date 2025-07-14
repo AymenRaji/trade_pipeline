@@ -78,6 +78,7 @@ services:
       - ${HOST_DLT_DIR}:/opt/dagster/app/dlt_pipeline
       - ${DLT_SECRETS_DIR}:/opt/dagster/app/.dlt
       - dagster_compute_logs:/opt/dagster/app/storage
+      - ${HOST_DBT_DIR}:/opt/dagster/app/dbt
     command: >
       bash -c "dagster-webserver -h 0.0.0.0 -p 3000 -w workspace.yaml"
 
