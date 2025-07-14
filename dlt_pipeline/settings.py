@@ -1,7 +1,9 @@
 import dlt
-
+from datetime import datetime, timezone, timedelta
 
 symbols = ["AAPL", "TSLA", "AMZN", "MSFT"]
+today = datetime.now(timezone.utc).date() - timedelta(days=1)
+end_date = f"{today}T00:00:00Z"
 
 def headers():
     api_key = dlt.secrets["sources.credentials.API_KEY"]
@@ -19,7 +21,6 @@ def headers():
 def retrive_daily_shares_parametrs():
    
     start_date = "1999-12-31T00:00:00Z"
-    end_date = "2025-07-03T00:00:00Z"
     param = {
         "symbols" : ",".join(symbols),
         "start": start_date,
@@ -34,7 +35,6 @@ def retrive_daily_shares_parametrs():
 def retrive_daily_news_paramets():
 
     start_date = "2015-01-01T00:00:00Z"
-    end_date = "2025-07-06T00:00:00Z"
     params = {
         "symbols":",".join(symbols),
         "start":start_date,
