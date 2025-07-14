@@ -27,7 +27,6 @@ def retrive_daily_shares():
         auctions = response_json.get("auctions", [])
 
         if auctions:
-            print(auctions)
             flatten_data = flatten_daily_shares(auctions)
             all_flatten_data.append(flatten_data)
 
@@ -38,7 +37,6 @@ def retrive_daily_shares():
         else:    
             params["page_token"] = next_token
 
-        print(all_flatten_data)
 
     return all_flatten_data
 
