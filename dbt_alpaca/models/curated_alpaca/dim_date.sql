@@ -17,7 +17,7 @@ filtered_dates AS (
 
 dim_date AS (
     SELECT
-        date::date,
+        date::date as date,
         EXTRACT(day from date) AS day,
         EXTRACT(MONTH FROM date) AS month,
         EXTRACT(YEAR FROM date) AS year,

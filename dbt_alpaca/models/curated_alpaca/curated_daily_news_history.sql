@@ -19,7 +19,7 @@ with source as (
 
 unnested as (
     select
-        id,
+        concat(id,flattened_symbol.value) as id,
         created_at::date as date,
         updated_at,
         author,
@@ -33,4 +33,6 @@ unnested as (
     lateral flatten(input => symbols) as flattened_symbol
 )
 
-select * from unnested
+select * 
+from unnested
+where symbol in ( 'AAPL', 'TSLA', 'AMZN', 'MSFT')

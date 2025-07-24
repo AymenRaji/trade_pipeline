@@ -2,9 +2,145 @@ version: 2
 
 models:
   - name: dim_date
+    description: "Date dimension table."
+    columns:
+      - name: date
+        description: "Full date (YYYY-MM-DD)."
+        tests:
+          - not_null
+          - unique
+      - name: day
+        description: "Day of the month (1-31)."
+        tests:
+          - not_null
+      - name: month
+        description: "Month of the year (1-12)."
+        tests:
+          - not_null
+      - name: year
+        description: "Four-digit year."
+        tests:
+          - not_null
+      - name: quarter
+        description: "Quarter of the year (1-4)."
+        tests:
+          - not_null
+      - name: day_of_week
+        description: "Day of week (e.g., Monday)."
+        tests:
+          - not_null
+      - name: week
+        description: "Week number."
+        tests:
+          - not_null
+      - name: is_weekend
+        description: "True if weekend."
+        tests:
+          - not_null
+
   - name: curated_daily_stock_history
+    description: "Daily stock trading history, enriched with calculated return percentage and volume change."
+    columns:
+      - name: id
+        description: "Unique identifier for each stock record, combining symbol and date"
+        tests: 
+          - unique
+          - not_null
+      - name: symbol
+        description: "Stock ticker symbol."
+        tests:
+          - not_null
+      - name: date
+        description: "Date of the trading record (YYYY-MM-DD)."
+        tests:
+          - not_null
+      - name: open_price
+        description: "Opening price of the stock on the given date."
+        tests:
+          - not_null
+      - name: open_volume
+        description: "Number of shares traded at market open."
+        tests:
+          - not_null
+      - name: close_price
+        description: "Closing price of the stock on the given date."
+        tests:
+          - not_null
+      - name: close_volume
+        description: "Number of shares traded at market close."
+        tests:
+          - not_null
+      - name: daily_return_percentage
+        description: "Percentage return from open to close."
+        tests:
+          - not_null
+      - name: daily_volume_change
+        description: "Net change in trading volume between market open and close."
+        tests:
+          - not_null
   - name: curated_daily_news_history
+    description: "Daily curated financial news, flattened by symbol, including metadata such as author, summary, and source."
+    columns:
+      - name: id
+        description: "description"
+        tests:
+          - unique
+          - not_null
+      - name: date
+        description: "description"
+        
+      - name: updated_date
+        description: "description"
+        
+      - name: author
+        description: "description"
+        
+      - name: content
+        description: "description"
+        
+      - name: headlines
+        description: "description"
+        
+      - name: summary
+        description: "description"
+        
+      - name: news_url
+        description: "description"
+        
+      - name: news_source
+        description: "description"
+        
+      - name: symbol
+        description: "description"
+        
+
   - name: fct_daily_stock_news_impact
+    description: "description."
+    columns:
+      - name: symbol
+        description: "description"
+         
+      - name: date
+        description: "description"
+         
+      - name: open_price
+        description: "description"
+         
+      - name: close_price
+        description: "description"
+         
+      - name: daily_return_perecntage
+        description: "description"
+         
+      - name: daily_volume_change
+        description: "description"
+         
+      - name: total_articles
+        description: "description"
+         
+      - name: headlines
+        description: "description"
+         
 
 
 sources:

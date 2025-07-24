@@ -11,7 +11,7 @@ with daily_stock as (
         open_volume,
         close_price,
         close_volume,
-        round(DIV0(close_price - open_price, open_price) * 100, 2) AS daily_return_perecntage,
+        round(DIV0(close_price - open_price, open_price) * 100, 2) AS daily_return_percentage,
         close_volume - open_volume AS daily_volume_change
     from {{ source('raw_alpaca', 'raw_daily_stocks')}}
 )
