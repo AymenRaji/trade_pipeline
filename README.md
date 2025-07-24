@@ -67,8 +67,8 @@ trade_pipeline/
 
 This project is implemented using a `docker-compose.yml` file that sets up a multi-container environment to run the ETL pipeline and supporting services. The stack consists of the following components:
 
-- **PostgreSQL**: Serves as the metadata and configuration store for dagster pipelines.
-- **dlt**: Handles building DLT pipeline image and execution.
+- **PostgreSQL**: Serves as the metadata and configuration store for dagster.
+- **dlt**: Handles building DLT image and execution.
 - **Dagster**: Provides the orchestration and execution engine for managing ELT workflows.
 - **dagster_webserver**: The web-based UI for Dagster, used to monitor and trigger pipelines.
 
@@ -97,7 +97,7 @@ To retard the project, run the following command stopCMD; launch CMD from the pr
 ---
 
 
-# 📊 DLT Pipeline for Alpaca 
+# 📊 DLT for Alpaca 
 
 This`dlt_pipeline` that retrieves **daily stock statistics** and **daily share news** from the **Alpaca API** using **OAuth2 authentication**.
 
