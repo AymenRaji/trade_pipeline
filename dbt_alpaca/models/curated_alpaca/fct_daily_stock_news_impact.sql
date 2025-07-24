@@ -8,7 +8,7 @@ WITH stocks AS (
         date,
         open_price,
         close_price,
-        daily_return_perecntage,
+        daily_return_percentage,
         daily_volume_change
     FROM {{ ref('curated_daily_stock_history') }}
 ),
